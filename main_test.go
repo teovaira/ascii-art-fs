@@ -1,85 +1,180 @@
 package main
 
 import (
-	"os/exec"
-	"strings"
 	"testing"
 )
 
-// Integration test: Run actual program and check output
-func TestMainProgram_Integration(t *testing.T) {
-	tests := []struct {
-		name        string
-		args        []string
-		expectError bool
-		checkOutput func(string) bool
-	}{
-		{
-			name:        "Hello with standard banner",
-			args:        []string{"Hello"},
-			expectError: false,
-			checkOutput: func(output string) bool {
-				// Should have 8 lines
-				lines := strings.Count(output, "\n")
-				return lines == 8
-			},
-		},
-		{
-			name:        "Empty string",
-			args:        []string{""},
-			expectError: false,
-			checkOutput: func(output string) bool {
-				// Should have 8 empty lines
-				return output == "\n\n\n\n\n\n\n\n"
-			},
-		},
-		{
-			name:        "With shadow banner",
-			args:        []string{"Hi", "shadow"},
-			expectError: false,
-			checkOutput: func(output string) bool {
-				// Should have 8 lines
-				lines := strings.Count(output, "\n")
-				return lines == 8
-			},
-		},
-		{
-			name:        "No arguments - usage error",
-			args:        []string{},
-			expectError: true,
-			checkOutput: nil,
-		},
-		{
-			name:        "Invalid banner",
-			args:        []string{"Hello", "invalid"},
-			expectError: true,
-			checkOutput: nil,
-		},
-	}
+// ============================================
+// UNIT TESTS FOR ParseArgs FUNCTION
+// ============================================
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			// Build command
-			args := append([]string{"run", "main.go"}, tt.args...)
-			cmd := exec.Command("go", args...)
-			
-			// Run command
-			output, err := cmd.CombinedOutput()
-			
-			// Check error expectation
-			if tt.expectError && err == nil {
-				t.Errorf("Expected error but got none")
-			}
-			if !tt.expectError && err != nil {
-				t.Errorf("Unexpected error: %v\nOutput: %s", err, output)
-			}
-			
-			// Check output if provided
-			if !tt.expectError && tt.checkOutput != nil {
-				if !tt.checkOutput(string(output)) {
-					t.Errorf("Output check failed.\nOutput:\n%s", output)
-				}
-			}
-		})
+// Test 1: ParseArgs with no arguments (just program name)
+func TestParseArgs_NoArguments(t *testing.T) {
+	// Arrange
+	args := []string{"./ascii-art"} // Just program name
+	
+	// Act
+	_, _, err := ParseArgs(args)
+	
+	// Assert
+	if err == nil {
+		t.Error("Expected error for no arguments, got nil")
+	}
+	
+	expectedMsg := "Usage: go run . \"text\" [banner]"
+	if err.Error() != expectedMsg {
+		t.Errorf("Expected error message: %q, got: %q", expectedMsg, err.Error())
+	}
+}
+
+// Test 2: ParseArgs with just text (should default to standard)
+func TestParseArgs_TextOnly(t *testing.T) {
+	// Arrange
+	args := []string{"./ascii-art", "Hello"}
+	
+	// Act
+	text, banner, err := ParseArgs(args)
+	
+	// Assert
+	if err != nil {
+		t.Errorf("Expected no error, got: %v", err)
+	}
+	
+	if text != "Hello" {
+		t.Errorf("Expected text: 'Hello', got: %q", text)
+	}
+	
+	if banner != "standard" {
+		t.Errorf("Expected banner: 'standard', got: %q", banner)
+	}
+}
+
+// Test 3: ParseArgs with text and banner name
+func TestParseArgs_TextAndBanner(t *testing.T) {
+	// Arrange
+	args := []string{"./ascii-art", "Hello", "shadow"}
+	
+	// Act
+	text, banner, err := ParseArgs(args)
+	
+	// Assert
+	if err != nil {
+		t.Errorf("Expected no error, got: %v", err)
+	}
+	
+	if text != "Hello" {
+		t.Errorf("Expected text: 'Hello', got: %q", text)
+	}
+	
+	if banner != "shadow" {
+		t.Errorf("Expected banner: 'shadow', got: %q", banner)
+	}
+}
+
+// Test 4: ParseArgs with too many arguments
+func TestParseArgs_TooManyArguments(t *testing.T) {
+	// Arrange
+	args := []string{"./ascii-art", "Hello", "shadow", "extra"}
+	
+	// Act
+	_, _, err := ParseArgs(args)
+	
+	// Assert
+	if err == nil {
+		t.Error("Expected error for too many arguments, got nil")
+	}
+}
+
+// Test 5: ParseArgs with all valid banner types
+func TestParseArgs_AllBannerTypes(t *testing.T) {
+	testCases := []struct {
+		args           []string
+		expectedBanner string
+	}{
+		{[]string{"prog", "Hi", "standard"}, "standard"},
+		{[]string{"prog", "Hi", "shadow"}, "shadow"},
+		{[]string{"prog", "Hi", "thinkertoy"}, "thinkertoy"},
+	}
+	
+	for _, tc := range testCases {
+		// Act
+		_, banner, err := ParseArgs(tc.args)
+		
+		// Assert
+		if err != nil {
+			t.Errorf("Args %v: expected no error, got: %v", tc.args, err)
+		}
+		
+		if banner != tc.expectedBanner {
+			t.Errorf("Args %v: expected banner %q, got: %q", 
+				tc.args, tc.expectedBanner, banner)
+		}
+	}
+}
+
+// Test 6: ParseArgs with empty string text
+func TestParseArgs_EmptyStringText(t *testing.T) {
+	// Arrange
+	args := []string{"./ascii-art", ""}
+	
+	// Act
+	text, banner, err := ParseArgs(args)
+	
+	// Assert
+	if err != nil {
+		t.Errorf("Expected no error for empty string, got: %v", err)
+	}
+	
+	if text != "" {
+		t.Errorf("Expected empty text, got: %q", text)
+	}
+	
+	if banner != "standard" {
+		t.Errorf("Expected banner: 'standard', got: %q", banner)
+	}
+}
+
+// ============================================
+// UNIT TESTS FOR GetBannerPath FUNCTION
+// ============================================
+
+// Test 7: GetBannerPath converts banner name to file path
+func TestGetBannerPath_ValidBanners(t *testing.T) {
+	testCases := []struct {
+		banner       string
+		expectedPath string
+	}{
+		{"standard", "testdata/standard.txt"},
+		{"shadow", "testdata/shadow.txt"},
+		{"thinkertoy", "testdata/thinkertoy.txt"},
+	}
+	
+	for _, tc := range testCases {
+		// Act
+		path, err := GetBannerPath(tc.banner)
+		
+		// Assert
+		if err != nil {
+			t.Errorf("Banner %q: expected no error, got: %v", tc.banner, err)
+		}
+		
+		if path != tc.expectedPath {
+			t.Errorf("Banner %q: expected path %q, got: %q",
+				tc.banner, tc.expectedPath, path)
+		}
+	}
+}
+
+// Test 8: GetBannerPath with invalid banner name
+func TestGetBannerPath_InvalidBanner(t *testing.T) {
+	// Arrange
+	banner := "invalid"
+	
+	// Act
+	_, err := GetBannerPath(banner)
+	
+	// Assert
+	if err == nil {
+		t.Error("Expected error for invalid banner, got nil")
 	}
 }
