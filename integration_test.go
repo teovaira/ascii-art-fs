@@ -1,3 +1,5 @@
+// Package main_test provides integration tests for the ascii-art application.
+// These tests verify end-to-end functionality by running the actual program.
 package main
 
 import (
@@ -102,10 +104,10 @@ func TestMainProgram_Integration(t *testing.T) {
 			// Build command
 			args := append([]string{"run", "main.go"}, tt.args...)
 			cmd := exec.Command("go", args...)
-			
+
 			// Run command
 			output, err := cmd.CombinedOutput()
-			
+
 			// Check error expectation
 			if tt.expectError && err == nil {
 				t.Errorf("Expected error but got none")
@@ -113,7 +115,7 @@ func TestMainProgram_Integration(t *testing.T) {
 			if !tt.expectError && err != nil {
 				t.Errorf("Unexpected error: %v\nOutput: %s", err, output)
 			}
-			
+
 			// Check output if provided
 			if !tt.expectError && tt.checkOutput != nil {
 				if !tt.checkOutput(string(output)) {
@@ -128,22 +130,22 @@ func TestMainProgram_Integration(t *testing.T) {
 func TestMainProgram_RealBannerFiles(t *testing.T) {
 	// This test requires banner files to exist
 	banners := []string{"standard", "shadow", "thinkertoy"}
-	
+
 	for _, banner := range banners {
 		t.Run("Banner_"+banner, func(t *testing.T) {
 			cmd := exec.Command("go", "run", "main.go", "ABC", banner)
 			output, err := cmd.CombinedOutput()
-			
+
 			if err != nil {
-				t.Errorf("Failed to run with %s banner: %v\nOutput: %s", 
+				t.Errorf("Failed to run with %s banner: %v\nOutput: %s",
 					banner, err, output)
 			}
-			
+
 			// Verify output has content
 			if len(output) == 0 {
 				t.Errorf("Expected output for banner %s, got empty", banner)
 			}
-			
+
 			// Verify correct number of lines
 			lines := strings.Count(string(output), "\n")
 			if lines != 8 {
@@ -163,7 +165,7 @@ func TestMainProgram_ErrorHandling(t *testing.T) {
 		{
 			name:     "No arguments",
 			args:     []string{},
-			errorMsg: "Usage:",
+			errorMsg: "usage:",
 		},
 		{
 			name:     "Invalid banner",
@@ -171,18 +173,18 @@ func TestMainProgram_ErrorHandling(t *testing.T) {
 			errorMsg: "invalid banner",
 		},
 	}
-	
+
 	for _, tt := range errorTests {
 		t.Run(tt.name, func(t *testing.T) {
 			cmd := exec.Command("go", append([]string{"run", "main.go"}, tt.args...)...)
 			output, err := cmd.CombinedOutput()
-			
+
 			if err == nil {
 				t.Errorf("Expected error for %s, got none", tt.name)
 			}
-			
+
 			if !strings.Contains(string(output), tt.errorMsg) {
-				t.Errorf("Expected error message containing %q, got: %s", 
+				t.Errorf("Expected error message containing %q, got: %s",
 					tt.errorMsg, output)
 			}
 		})
