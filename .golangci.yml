@@ -1,0 +1,123 @@
+# golangci-lint configuration for ascii-art project
+# See: https://golangci-lint.run/usage/configuration/
+
+run:
+  # Timeout for analysis
+  timeout: 5m
+
+  # Include test files
+  tests: true
+
+linters-settings:
+  errcheck:
+    # Report about not checking of errors in type assertions
+    check-type-assertions: true
+    # Report about assignment of errors to blank identifier
+    check-blank: true
+
+  govet:
+    # Enable all analyzers except fieldalignment
+    enable-all: true
+    disable:
+      - fieldalignment  # Minor memory optimization, not critical
+
+  gocyclo:
+    # Minimal code complexity to report
+    min-complexity: 15
+
+  dupl:
+    # Tokens count to trigger issue
+    threshold: 100
+
+  goconst:
+    # Minimal length of string constant
+    min-len: 2
+    # Minimum occurrences to report
+    min-occurrences: 2
+
+  misspell:
+    locale: US
+
+  lll:
+    # Max line length
+    line-length: 120
+
+  goimports:
+    # Put imports beginning with prefix after 3rd-party packages
+    local-prefixes: ascii-art
+
+  gocritic:
+    # Enable multiple checks by tags
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+    disabled-checks:
+      - unnecessaryBlock
+
+linters:
+  enable:
+    # Default linters
+    - errcheck      # Check for unchecked errors
+    - gosimple      # Simplify code
+    - govet         # Reports suspicious constructs
+    - ineffassign   # Detect ineffectual assignments
+    - staticcheck   # Static analysis checks
+    - unused        # Check for unused constants, variables, functions and types
+
+    # Additional quality linters
+    - gofmt         # Check whether code was gofmt-ed
+    - goimports     # Check import statements are formatted
+    - misspell      # Find misspelled English words in comments
+    - goconst       # Find repeated strings that could be constants
+    - gocyclo       # Compute cyclomatic complexity
+    - dupl          # Code clone detection
+    - gosec         # Security problems
+    - unconvert     # Remove unnecessary type conversions
+    - unparam       # Reports unused function parameters
+    - prealloc      # Find slice declarations that could be pre-allocated
+
+    # Style linters
+    - stylecheck    # Replacement for golint
+    - revive        # Fast, configurable, extensible, flexible, and beautiful linter for Go
+
+  disable:
+    - typecheck     # Can be buggy with generics
+
+issues:
+  # Don't hide multiple issues in the same file
+  max-same-issues: 0
+
+  # Don't limit the number of issues
+  max-issues-per-linter: 0
+
+  # Exclude some default patterns
+  exclude-use-default: false
+
+  # Independently of option `exclude` we use default exclude patterns
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - goconst
+        - fieldalignment  # Field ordering optimization not critical in tests
+    # Exclude fieldalignment from all test files
+    - linters:
+        - fieldalignment
+      path: ".*_test\\.go$|integration_test\\.go$"
+
+output:
+  # Format: colored-line-number|line-number|json|tab|checkstyle|code-climate
+  formats:
+    - format: colored-line-number
+      path: stdout
+
+  # Print lines of code with issue
+  print-issued-lines: true
+
+  # Print linter name in the end of issue text
+  print-linter-name: true
