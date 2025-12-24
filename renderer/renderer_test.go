@@ -7,9 +7,10 @@ import (
 func TestEmptyInput(t *testing.T) {
 	input := ""
 	banner := map[rune][]string{}
-	output := rendererASCII(input, banner)
+	output := RendererASCII(input, banner)
 	if input != output {
-		t.Errorf("Error")
+		t.Errorf("expected:\n%q\ngot:\n%q", input, output)
+
 	}
 }
 func TestSingleCharacter(t *testing.T) {
@@ -34,9 +35,10 @@ A8`
 			"A8",
 		},
 	}
-	output := rendererASCII(input, banner)
+	output := RendererASCII(input, banner)
 	if expected != output {
-		t.Error("Error")
+		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+
 	}
 }
 func TestMultipleCharacters(t *testing.T) {
@@ -71,9 +73,10 @@ A8B8`
 			"B8",
 		},
 	}
-	output := rendererASCII(input, banner)
+	output := RendererASCII(input, banner)
 	if expected != output {
-		t.Error("Error")
+		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+
 	}
 
 }
@@ -109,9 +112,10 @@ A8  A8`
 			"  ",
 		},
 	}
-	output := rendererASCII(input, banner)
+	output := RendererASCII(input, banner)
 	if expected != output {
-		t.Error("Error")
+		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+
 	}
 
 }
@@ -147,9 +151,10 @@ A81A8`
 			"1",
 		},
 	}
-	output := rendererASCII(input, banner)
+	output := RendererASCII(input, banner)
 	if expected != output {
-		t.Error("Error")
+		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+
 	}
 }
 func TestSpecialCharacters(t *testing.T) {
@@ -184,9 +189,10 @@ func TestSpecialCharacters(t *testing.T) {
 			"}",
 		},
 	}
-	output := rendererASCII(input, banner)
+	output := RendererASCII(input, banner)
 	if expected != output {
-		t.Error("Error")
+		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+
 	}
 }
 func TestNewlineBetweenCharacters(t *testing.T) {
@@ -229,9 +235,28 @@ B8`
 			"B8",
 		},
 	}
-	output := rendererASCII(input, banner)
+	output := RendererASCII(input, banner)
 	if expected != output {
-		t.Error("Error")
+		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+
 	}
 
+}
+func TestTrailingNewline(t *testing.T) {
+	input := "A\n"
+	expected := `A1
+A2
+A3
+A4
+A5
+A6
+A7
+A8`
+	banner := map[rune][]string{
+		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
+	}
+	output := RendererASCII(input, banner)
+	if expected != output {
+		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
+	}
 }
