@@ -16,7 +16,7 @@ Thank you for your interest in contributing to the ascii-art project! This docum
 
 ## Code of Conduct
 
-This project is part of the Zone01 Kisumu curriculum. We expect all contributors to:
+This project is part of the Zone01 curriculum. We expect all contributors to:
 
 - Be respectful and constructive in discussions
 - Focus on what is best for the project and community
@@ -44,18 +44,12 @@ This project is part of the Zone01 Kisumu curriculum. We expect all contributors
    go version  # Should be 1.22.2 or higher
    ```
 
-3. **Download dependencies**
-   ```bash
-   make deps
-   # or: go mod download && go mod verify
-   ```
-
-4. **Run tests to ensure everything works**
+3. **Run tests to ensure everything works**
    ```bash
    make test
    ```
 
-5. **Install golangci-lint (optional but recommended)**
+4. **Install golangci-lint (optional but recommended)**
    ```bash
    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
    ```
@@ -123,7 +117,7 @@ This project follows the official Go style guide and best practices:
 
 1. **Formatting**
    - Use `gofmt` for formatting (enforced)
-   - Use `goimports` for import organization
+   - Use `goimports` for import organization (auto-adds/removes imports, organizes them)
    - Line length: 120 characters max
 
 2. **Naming Conventions**
@@ -154,9 +148,9 @@ This project follows the official Go style guide and best practices:
    - Exception: Development tools (linters, etc.)
 
 2. **Security**
-   - Validate all file paths
-   - Use `#nosec` annotations only when justified
-   - Never expose internal paths in errors
+   - Validate all file paths before use (never trust user input directly)
+   - Use `#nosec` annotations only when path is validated (e.g., through banner name mapping)
+   - Never expose internal paths in error messages (keep errors generic)
 
 3. **Performance**
    - Use `strings.Builder` for string concatenation
@@ -248,7 +242,7 @@ go test ./parser -v
 # Specific test
 go test -run TestParseBannerFile
 
-# With race detector
+# With race detector (detects concurrent access bugs)
 go test -race ./...
 
 # Benchmarks
@@ -298,9 +292,9 @@ Closes #42
 ```
 
 ```
-fix(renderer): correct newline handling for empty strings
+fix(parser): handle truncated banner files gracefully
 
-Fixed issue where empty strings weren't rendering 8 empty lines.
+Fixed crash when banner file has fewer than expected lines.
 ```
 
 ```
@@ -358,17 +352,22 @@ When creating a PR, include:
 ### Review Process
 
 1. At least one approval required
-2. All CI checks must pass
-3. No merge conflicts
-4. Code follows style guide
+2. No merge conflicts
+3. Code follows style guide
+4. All tests pass locally
 5. Tests demonstrate functionality
 
 ## Project Structure
 
 ```
 ascii-art/
-├── main.go                 # CLI entry point
-├── integration_test.go     # End-to-end tests
+├── .gitignore             # Git ignore rules
+├── .golangci.yml          # Linter configuration
+├── LICENSE                # Project license
+├── Makefile               # Build automation
+├── go.mod                 # Go module file
+├── main.go                # CLI entry point
+├── integration_test.go    # End-to-end tests
 ├── main_test.go           # Unit tests for main
 ├── parser/                # Banner file parser
 │   ├── parser.go
@@ -382,12 +381,12 @@ ascii-art/
 │   ├── standard.txt
 │   ├── shadow.txt
 │   └── thinkertoy.txt
-├── Makefile              # Build automation
-├── .golangci.yml         # Linter configuration
-├── README.md             # User documentation
-├── AGENTS.md             # AI agent instructions
-├── CHANGELOG.md          # Version history
-└── CONTRIBUTING.md       # This file
+└── Documentation/
+    ├── README.md          # User documentation
+    ├── AGENTS.md          # AI agent instructions
+    ├── CHANGELOG.md       # Version history
+    ├── CONTRIBUTING.md    # This file
+    └── PERMISSIONS.md     # Team permissions
 ```
 
 ## Common Tasks
@@ -471,7 +470,7 @@ ascii-art/
 
 ## License
 
-This project is part of the Zone01 Kisumu curriculum.
+This project is part of the Zone01 curriculum.
 
 ---
 
