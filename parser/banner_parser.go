@@ -1,8 +1,21 @@
+// Package parser provides functionality for loading and parsing ASCII art banner files.
+// Supports standard ASCII printable characters (32-126) from banner files in the format:
+// 8 lines per character + 1 separator line, 856 total lines for 95 characters.
 package parser
 
 import (
 	"bufio"
+	"fmt"
 	"os"
+)
+
+const (
+	firstPrintable rune = 32  // ASCII 32 (space)
+	lastPrintable  rune = 126 // ASCII 126 (tilde)
+	totalChars          = 95
+	expectedLines       = 855 // 95 chars × 9 lines (8 glyph + 1 separator)
+	linesPerGlyph       = 8
+	linesPerChar        = 9 // 8 glyph + 1 separator
 )
 
 // Banner represents the ASCII-art data for all supported characters.
@@ -12,54 +25,66 @@ type Banner map[rune][]string
 func LoadBanner(path string) (Banner, error) {
 	lines, err := readLines(path)
 	if err != nil {
-		return nil, err // caller decides how to handle I/O errors
+		return nil, fmt.Errorf("failed to read banner file %q: %w", path, err)
 	}
-	return buildBanner(lines), nil
+	banner, err := buildBanner(lines)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse banner %q: %w", path, err)
+	}
+	return banner, nil
 }
 
 // readLines opens the file at the given path and returns all its lines as a slice of strings.
 func readLines(path string) ([]string, error) {
 	// Open the file for reading.
-	file, err := os.Open(path)
+	file, err := os.Open(path) // #nosec G304 -- trusted banner files
 	if err != nil {
-		return nil, err // propagate any error (e.g. file not found)
+		return nil, err
 	}
-	defer file.Close() // ensure the file is closed when we return
+
+	defer func() {
+		if closeErr := file.Close(); closeErr != nil && err == nil {
+			err = closeErr
+		}
+	}()
 
 	// Create a scanner to read the file line by line.
 	scanner := bufio.NewScanner(file)
 
 	var lines []string
-	// Scan each line and append its text to the slice.
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
-	// Check for any scanning error (I/O errors, etc.).
-	if err := scanner.Err(); err != nil {
-		return nil, err
+	if scanErr := scanner.Err(); scanErr != nil {
+		return lines, scanErr
 	}
 	// Return all collected lines.
 	return lines, nil
 }
 
-// firstPrintable and lastPrintable define the ASCII range this banner supports.
-const (
-	firstPrintable = rune(32)  // space
-	lastPrintable  = rune(126) // ~
-)
-
-// buildBanner groups the given lines into 8-line glyphs for each printable ASCII rune.
-// It assumes the input format is: 8 lines of glyph + 1 blank separator line per character.
-func buildBanner(lines []string) Banner {
-	banner := make(Banner)
-	runeCode := firstPrintable // current rune we are filling (starts at space)
-	i := 0
-	// Each character uses 8 lines plus 1 separator line.
-	for i+8 <= len(lines) && runeCode <= lastPrintable {
-		block := lines[i : i+8]  // 8 lines for this rune
-		banner[runeCode] = block // store glyph in the map
-		runeCode++               // move to next rune
-		i += 9                   // skip 8 glyph lines + 1 separator line
+func buildBanner(lines []string) (Banner, error) {
+	if len(lines) == 0 {
+		return nil, fmt.Errorf("empty banner file")
 	}
-	return banner
+	if len(lines) != expectedLines {
+		return nil, fmt.Errorf("invalid format: expected %d lines, got %d",
+			expectedLines, len(lines))
+	}
+
+	banner := make(Banner)
+	runeCode := firstPrintable
+	i := 0
+
+	for i+linesPerGlyph <= len(lines) && runeCode <= lastPrintable {
+		block := lines[i : i+linesPerGlyph]
+		banner[runeCode] = block
+		runeCode++
+		i += linesPerChar
+	}
+
+	if len(banner) != totalChars {
+		return nil, fmt.Errorf("incomplete banner: got %d chars, expected %d",
+			len(banner), totalChars)
+	}
+	return banner, nil
 }
