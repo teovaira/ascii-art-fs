@@ -9,6 +9,14 @@ const bannerHeight = 8
 
 func RendererASCII(input string, banner map[rune][]string) (string, error) {
 	result := ""
+	for _, ch := range input {
+		if ch == '\n' {
+			continue
+		}
+		if ch < 32 || ch > 126 {
+			return "", fmt.Errorf("not printable characters")
+		}
+	}
 	parts := strings.Split(input, "\n")
 	// Remove trailing empty string only if input ends with \n
 	if len(parts) > 0 && parts[len(parts)-1] == "" {
@@ -21,6 +29,7 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 	if len(banner) == 0 {
 		return result, fmt.Errorf("banner is empty")
 	}
+
 	for p, line := range parts {
 		// Handle empty lines(from consecutive \n\n)
 		if line == "" {
@@ -31,6 +40,7 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 		// Render each line of the ASCII art
 		for i := 0; i < bannerHeight; i++ {
 			for _, ch := range line {
+
 				value, err := characterValidation(ch, banner)
 				if err != nil {
 					return "", err
