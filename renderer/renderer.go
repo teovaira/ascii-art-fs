@@ -1,10 +1,13 @@
 package renderer
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 const bannerHeight = 8
 
-func RendererASCII(input string, banner map[rune][]string) string {
+func RendererASCII(input string, banner map[rune][]string) (string, error) {
 	result := ""
 	parts := strings.Split(input, "\n")
 	// Remove trailing empty string only if input ends with \n
@@ -13,7 +16,10 @@ func RendererASCII(input string, banner map[rune][]string) string {
 	}
 	// Handle special case: input is just empty or just "\n"
 	if len(parts) == 0 || len(parts) == 1 && parts[0] == "" {
-		return result
+		return result, nil
+	}
+	if len(banner) == 0 {
+		return result, fmt.Errorf("banner is empty")
 	}
 	for p, line := range parts {
 		// Handle empty lines(from consecutive \n\n)
@@ -21,13 +27,15 @@ func RendererASCII(input string, banner map[rune][]string) string {
 			result += "\n"
 			continue
 		}
+
 		// Render each line of the ASCII art
 		for i := 0; i < bannerHeight; i++ {
 			for _, ch := range line {
-				rows := banner[ch]
-
-				result += rows[i]
-
+				value, err := characterValidation(ch, banner)
+				if err != nil {
+					return "", err
+				}
+				result += value[i]
 			}
 			result += "\n"
 		}
@@ -37,5 +45,16 @@ func RendererASCII(input string, banner map[rune][]string) string {
 			result = result[:len(result)-1]
 		}
 	}
-	return result
+	return result, nil
+}
+func characterValidation(ch rune, banner map[rune][]string) ([]string, error) {
+
+	value, exists := banner[ch]
+	if exists == false {
+		return []string{}, fmt.Errorf("the character does not exist in the banner")
+	}
+	if len(value) != bannerHeight {
+		return []string{}, fmt.Errorf("The character does not have correct number of rows")
+	}
+	return value, nil
 }
