@@ -253,6 +253,9 @@ B8`
 		t.Errorf("expected:\n%q\ngot:\n%q", expected, output)
 	}
 }
+
+// TestMissigCharaster checks that rendering fails
+// when the input contains a character missing from the banner.
 func TestMissigCharaster(t *testing.T) {
 	input := "AB"
 	banner := map[rune][]string{
@@ -268,6 +271,9 @@ func TestMissigCharaster(t *testing.T) {
 	}
 
 }
+
+// TestCorruptedBanner checks that rendering fails
+// when a banner character has an invalid number of rows.
 func TestCorruptedBanner(t *testing.T) {
 	input := "A"
 	banner := map[rune][]string{
@@ -281,6 +287,9 @@ func TestCorruptedBanner(t *testing.T) {
 		t.Errorf("expected empty output on error, got %q", output)
 	}
 }
+
+// TestInvalidCharacters checks that rendering fails
+// when the input contains non-printable ASCII characters.
 func TestInvalidCharacters(t *testing.T) {
 	input := "A	B"
 	banner := map[rune][]string{
@@ -296,6 +305,9 @@ func TestInvalidCharacters(t *testing.T) {
 		t.Errorf("expected empty output on error, got %q", output)
 	}
 }
+
+// TestCompleteASCIIRange checks that all printable ASCII characters
+// can be rendered when the banner is complete
 func TestCompleteASCIIRange(t *testing.T) {
 	banner := make(map[rune][]string)
 
