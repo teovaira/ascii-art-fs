@@ -17,21 +17,29 @@ import (
 const bannerHeight = 8
 
 // RendererASCII converts an input string into ASCII art using the provided banner map.
-// Each character in the input is rendered as an 8-line ASCII block defined in the banner.
-// Newline characters ('\n') in the input create separate ASCII-art blocks in the output.
 //
-// Input validation rules:
-//   - Characters must be printable ASCII (range 32–126) or '\n'
-//   - The banner map must contain all characters used in the input
-//   - Each banner entry must consist of exactly 8 lines
+// The input may contain printable ASCII characters (codes 32–126) and newline characters ('\n').
+// Newlines are treated as line separators and are not rendered as characters.
+//
+// Behavior:
+//   - Empty input or input consisting only of a single newline returns an empty result.
+//   - Consecutive newline characters produce empty output lines, preserving input structure.
+//   - Each non-empty input line is rendered as a block of bannerHeight ASCII-art rows.
+//   - A trailing newline in the input does not produce an extra ASCII-art block.
+//
+// Validation:
+//   - Returns an error if the input contains non-printable characters (excluding '\n').
+//   - Returns an error if the banner map is empty.
+//   - Returns an error if a character is missing from the banner or has an invalid height.
 //
 // Parameters:
-//   - input: The text to render. It may contain '\n' for multi-line ASCII output.
-//   - banner: A map of runes to their 8-line ASCII art representations.
+//   - input: The text to render as ASCII art.
+//   - banner: A map associating each rune with its ASCII-art representation,
+//     where each value must contain exactly bannerHeight rows.
 //
 // Returns:
-//   - A string containing the rendered ASCII art
-//   - An error if the input contains invalid characters or the banner data is incomplete
+//   - The rendered ASCII-art string.
+//   - An error if input validation or banner validation fails.
 func RendererASCII(input string, banner map[rune][]string) (string, error) {
 	var result strings.Builder
 	for _, ch := range input {
@@ -48,7 +56,7 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 		parts = parts[0 : len(parts)-1]
 	}
 	// Handle special case: input is just empty or just "\n"
-	if len(parts) == 0 || len(parts) == 1 && parts[0] == "" {
+	if input == "" || input == "\n" {
 		return "", nil
 	}
 	if len(banner) == 0 {
@@ -84,6 +92,19 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 	}
 	return output, nil
 }
+
+// characterValidation validates that a character exists in the banner map
+// and that its ASCII-art representation has the correct height.
+//
+// Parameters:
+//   - ch: The character to validate.
+//   - banner: The banner map containing ASCII-art definitions.
+//
+// Returns:
+//   - The ASCII-art rows corresponding to the character.
+//   - An error if the character does not exist in the banner
+//     or if it does not contain exactly bannerHeight rows.
+
 func characterValidation(ch rune, banner map[rune][]string) ([]string, error) {
 
 	value, exists := banner[ch]
