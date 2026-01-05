@@ -22,11 +22,11 @@ func TestWithRealStandardBanner(t *testing.T) {
 		input     string
 		wantLines int
 	}{
-		{"simple word", "Hello", 8},
-		{"with space", "Hello World", 8},
-		{"with numbers", "Hello123", 8},
-		{"single newline", "Hello\nWorld", 16},
-		{"double newline", "A\n\nB", 17},
+		{"simple word", "Hello", 9},
+		{"with space", "Hello World", 9},
+		{"with numbers", "Hello123", 9},
+		{"single newline", "Hello\nWorld", 17},
+		{"double newline", "A\n\nB", 18},
 	}
 
 	for _, tt := range tests {
@@ -58,8 +58,8 @@ func TestWithRealShadowBanner(t *testing.T) {
 	}
 
 	lines := strings.Split(output, "\n")
-	if len(lines) != 8 {
-		t.Errorf("expected 8 lines, got %d", len(lines))
+	if len(lines) != 9 {
+		t.Errorf("expected 9 lines (8 content + empty from trailing newline), got %d", len(lines))
 	}
 }
 
@@ -77,7 +77,7 @@ func TestWithRealThinkertoyBanner(t *testing.T) {
 	}
 
 	lines := strings.Split(output, "\n")
-	if len(lines) != 8 {
-		t.Errorf("expected 8 lines, got %d", len(lines))
+	if len(lines) != 9 {
+		t.Errorf("expected 9 lines (8 content + empty from trailing newline), got %d", len(lines))
 	}
 }

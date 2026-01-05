@@ -36,7 +36,8 @@ A4
 A5
 A6
 A7
-A8`
+A8
+`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
@@ -61,7 +62,8 @@ A4B4
 A5B5
 A6B6
 A7B7
-A8B8`
+A8B8
+`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
@@ -88,7 +90,8 @@ A4  A4
 A5  A5
 A6  A6
 A7  A7
-A8  A8`
+A8  A8
+`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		' ': {"  ", "  ", "  ", "  ", "  ", "  ", "  ", "  "},
@@ -115,7 +118,8 @@ A41A4
 A51A5
 A61A6
 A71A7
-A81A8`
+A81A8
+`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'1': {"1", "1", "1", "1", "1", "1", "1", "1"},
@@ -149,11 +153,11 @@ func TestAllSpecialCharacters(t *testing.T) {
 	}
 
 	lines := strings.Split(output, "\n")
-	if len(lines) != 8 {
-		t.Fatalf("expected 8 lines, got %d", len(lines))
+	if len(lines) != 9 {
+		t.Fatalf("expected 9 lines (8 content + trailing newline), got %d", len(lines))
 	}
 
-	for i, line := range lines {
+	for i, line := range lines[:8] {
 		if len(line) != len(specials) {
 			t.Errorf("line %d: expected %d chars, got %d", i, len(specials), len(line))
 		}
@@ -179,7 +183,8 @@ B4
 B5
 B6
 B7
-B8`
+B8
+`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
@@ -206,7 +211,8 @@ A4
 A5
 A6
 A7
-A8`
+A8
+`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 	}
@@ -240,7 +246,8 @@ B4
 B5
 B6
 B7
-B8`
+B8
+`
 	banner := map[rune][]string{
 		'A': {"A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8"},
 		'B': {"B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8"},
@@ -332,11 +339,11 @@ func TestCompleteASCIIRange(t *testing.T) {
 	}
 
 	lines := strings.Split(output, "\n")
-	if len(lines) != 8 {
-		t.Fatalf("expected 8 lines, got %d", len(lines))
+	if len(lines) != 9 {
+		t.Fatalf("expected 9 lines (8 content + trailing newline), got %d", len(lines))
 	}
 
-	for i, line := range lines {
+	for i, line := range lines[:8] {
 		if len(line) != 95 {
 			t.Errorf("line %d: expected 95 chars, got %d", i, len(line))
 		}
