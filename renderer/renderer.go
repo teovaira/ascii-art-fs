@@ -121,7 +121,10 @@ func validateBannerCharacters(ch rune, banner map[rune][]string) ([]string, erro
 		return []string{}, fmt.Errorf("character %c (ASCII %d) not found in banner", ch, ch)
 	}
 	if len(value) != bannerHeight {
-		return []string{}, fmt.Errorf("invalid character at position  %c (ASCII %d) - must be printable ASCII (32-126) or newline", ch, ch)
+		return []string{}, fmt.Errorf(
+			"banner entry for %c (ASCII %d) has %d lines, expected %d",
+			ch, ch, len(value), bannerHeight,
+		)
 	}
 	return value, nil
 }
@@ -138,7 +141,7 @@ func validateInput(input string) error {
 		}
 		if ch < 32 || ch > 126 {
 
-			return fmt.Errorf("not printable characters")
+			return fmt.Errorf("invalid character %q (ASCII %d) - must be printable ASCII (32-126)", ch, ch)
 		}
 	}
 	return nil
