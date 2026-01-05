@@ -92,14 +92,7 @@ func RendererASCII(input string, banner map[rune][]string) (string, error) {
 		}
 	}
 
-	output := result.String()
-
-	// Remove the final trailing newline from the output
-	if output != "" && output[len(output)-1] == '\n' {
-		output = output[:len(output)-1]
-	}
-
-	return output, nil
+	return result.String(), nil
 }
 
 // validateBannerCharacters validates that a character exists in the banner map
