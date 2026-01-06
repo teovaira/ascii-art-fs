@@ -154,28 +154,6 @@ coverage-view: coverage
 	 which open > /dev/null && open $(COVERAGE_HTML) || \
 	 echo "Please open $(COVERAGE_HTML) manually"
 
-## bench: Run benchmarks
-.PHONY: bench
-bench:
-	@echo "${COLOUR_BLUE}Running benchmarks...${COLOUR_END}"
-	@go test -bench=. -benchmem ./...
-
-## bench-cpu: Run benchmarks with CPU profiling
-.PHONY: bench-cpu
-bench-cpu:
-	@echo "${COLOUR_BLUE}Running benchmarks with CPU profiling...${COLOUR_END}"
-	@go test -bench=. -benchmem -cpuprofile=cpu.prof ./...
-	@echo "${COLOUR_GREEN}✓ CPU profile saved to cpu.prof${COLOUR_END}"
-	@echo "  View with: go tool pprof cpu.prof"
-
-## bench-mem: Run benchmarks with memory profiling
-.PHONY: bench-mem
-bench-mem:
-	@echo "${COLOUR_BLUE}Running benchmarks with memory profiling...${COLOUR_END}"
-	@go test -bench=. -benchmem -memprofile=mem.prof ./...
-	@echo "${COLOUR_GREEN}✓ Memory profile saved to mem.prof${COLOUR_END}"
-	@echo "  View with: go tool pprof mem.prof"
-
 # ==================================================================================== #
 # BUILD & RELEASE
 # ==================================================================================== #

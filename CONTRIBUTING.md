@@ -244,9 +244,6 @@ go test -run TestParseBannerFile
 
 # With race detector (detects concurrent access bugs)
 go test -race ./...
-
-# Benchmarks
-make bench
 ```
 
 ## Commit Message Format
@@ -413,13 +410,7 @@ ascii-art/
    # Run: make test (should pass)
    ```
 
-4. **Add benchmarks if performance-critical**
-   ```bash
-   touch feature_bench_test.go
-   # Run: make bench
-   ```
-
-5. **Update documentation**
+4. **Update documentation**
    - README.md
    - CHANGELOG.md
    - Inline comments
@@ -440,29 +431,6 @@ ascii-art/
 
 4. **Update CHANGELOG.md**
    - Add entry under "Fixed" section
-
-### Improving Performance
-
-1. **Measure first**
-   ```bash
-   make bench         # Get baseline
-   make bench-cpu     # CPU profiling
-   make bench-mem     # Memory profiling
-   ```
-
-2. **Optimize**
-   - Make targeted improvements
-   - Avoid premature optimization
-
-3. **Benchmark again**
-   ```bash
-   make bench
-   # Compare with baseline
-   ```
-
-4. **Document improvements**
-   - Update PERFORMANCE.md
-   - Update CHANGELOG.md
 
 ## Questions or Issues?
 

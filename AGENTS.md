@@ -33,10 +33,6 @@ go test -race ./...
 # Generate coverage report
 make coverage
 # or: go test -coverprofile=coverage.out ./...
-
-# Run benchmarks
-make bench
-# or: go test -bench=. -benchmem ./...
 ```
 
 ## Code Style and Conventions
@@ -68,7 +64,6 @@ make bench
 ### Test Organization
 - Use table-driven tests for multiple scenarios
 - Test files: `*_test.go` in same package
-- Benchmark files: `*_bench_test.go`
 - Integration tests: `integration_test.go` in main package
 
 ### Coverage Requirements
@@ -190,7 +185,6 @@ make build-all      # All platforms (Linux, macOS, Windows)
 ### Optimization Rules
 - DO use `strings.Builder` for string concatenation
 - DO preallocate slices when size is known
-- DON'T optimize without benchmarking first
 - DON'T add complexity for hypothetical performance gains
 
 ## Common Tasks
@@ -214,9 +208,8 @@ make build-all      # All platforms (Linux, macOS, Windows)
 1. Discuss approach (architectural decision)
 2. Write tests first (TDD)
 3. Implement feature
-4. Add benchmarks if performance-critical
-5. Update documentation (README, inline docs)
-6. Update CHANGELOG.md
+4. Update documentation (README, inline docs)
+5. Update CHANGELOG.md
 
 ## DO NOT
 
