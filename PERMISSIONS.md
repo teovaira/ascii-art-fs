@@ -50,11 +50,11 @@
 **For Krystallenia & Vasiliki:**
 ```bash
 1. git checkout develop
-2. git pull origin develop
+2. git pull upstream develop          # Pull from Theo's upstream repo
 3. git checkout -b feature/your-feature
 4. [make changes and commit]
 5. git push origin feature/your-feature
-6. Create PR on Gitea: feature/your-feature → develop
+6. Create PR on Gitea: feature/your-feature → Theo's develop branch
 7. Wait for Theo's review
 8. Address feedback if needed
 9. Theo merges when approved
