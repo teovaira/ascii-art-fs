@@ -28,8 +28,8 @@ go.work.sum
 
 # Build artifacts
 bin/
-ascii-art
-ascii-art-*
+/ascii-art
+/ascii-art-*
 
 # Coverage reports
 coverage.out
