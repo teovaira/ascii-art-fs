@@ -16,24 +16,26 @@ func TestParseNamedColor(t *testing.T) {
 
 func TestParseNamedColors(t *testing.T) {
 	tests := []struct {
-		name string
-		spec string
-		want RGB
+		name    string
+		spec    string
+		want    RGB
+		wantErr bool
 	}{
-		{"red", "red", RGB{255, 0, 0}},
-		{"green", "green", RGB{0, 255, 0}},
-		{"blue", "blue", RGB{0, 0, 255}},
-		{"case insensitive", "RED", RGB{255, 0, 0}},
+		{"red", "red", RGB{255, 0, 0}, false},
+		{"green", "green", RGB{0, 255, 0}, false},
+		{"blue", "blue", RGB{0, 0, 255}, false},
+		{"case insensitive", "RED", RGB{255, 0, 0}, false},
+		{"unknown color", "blurple", RGB{}, true},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := Parse(tt.spec)
-			if err != nil {
-				t.Fatalf(`Parse("%s") error = %v`, tt.spec, err)
+			if (err != nil) != tt.wantErr {
+				t.Fatalf(`Parse(%q) error = %v, wantErr %t`, tt.spec, err, tt.wantErr)
 			}
-			if got != tt.want {
-				t.Fatalf(`Parse("%s") = %#v, want %#v`, tt.spec, got, tt.want)
+			if !tt.wantErr && got != tt.want {
+				t.Fatalf(`Parse(%q) = %#v, want %#v`, tt.spec, got, tt.want)
 			}
 		})
 	}
