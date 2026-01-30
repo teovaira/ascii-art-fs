@@ -54,3 +54,78 @@ func TestParseNamedColors(t *testing.T) {
 		})
 	}
 }
+
+func TestANSI(t *testing.T) {
+	tests := []struct {
+		name string
+		rgb  RGB
+		want string
+	}{
+		{
+			name: "red",
+			rgb:  RGB{255, 0, 0},
+			want: "\033[38;2;255;0;0m",
+		},
+		{
+			name: "green",
+			rgb:  RGB{0, 255, 0},
+			want: "\033[38;2;0;255;0m",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := ANSI(tt.rgb)
+			if got != tt.want {
+				t.Fatalf("ANSI(%#v) = %q, want %q", tt.rgb, got, tt.want)
+			}
+
+		})
+	}
+}
+
+func TestWrap(t *testing.T) {
+	tests := []struct {
+		name    string
+		text    string
+		spec    string
+		want    string
+		wantErr bool
+	}{
+		{
+			name: "red text",
+			text: "Hello",
+			spec: "red",
+			want: "\033[38;2;255;0;0mHello\033[0m",
+		},
+		{
+			name: "hex red",
+			text: "World",
+			spec: "#ff0000",
+			want: "\033[38;2;255;0;0mWorld\033[0m",
+		},
+		{
+			name:    "unknown color error",
+			text:    "Fail",
+			spec:    "blurple",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := Wrap(tt.text, tt.spec)
+
+			if (err != nil) != tt.wantErr {
+				t.Fatalf("Wrap(%q, %q) error = %v, wantErr %t",
+					tt.text, tt.spec, err, tt.wantErr)
+			}
+
+			if !tt.wantErr && got != tt.want {
+				t.Fatalf("Wrap(%q, %q) = %q, want %q", tt.text,
+					tt.spec, got, tt.want)
+			}
+
+		})
+	}
+}

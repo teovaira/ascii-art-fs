@@ -95,3 +95,15 @@ func parseRGB(rgbStr string) (RGB, error) {
 
 	return RGB{r, g, b}, nil
 }
+
+func ANSI(rgb RGB) string {
+	return fmt.Sprintf("\033[38;2;%d;%d;%dm", rgb.R, rgb.G, rgb.B)
+}
+
+func Wrap(text, spec string) (string, error) {
+	rgb, err := Parse(spec)
+	if err != nil {
+		return "", err
+	}
+	return ANSI(rgb) + text + "\033[0m", nil
+}
