@@ -19,11 +19,18 @@ func ParseArgs(args []string) error {
 	if strings.HasPrefix(args[1], "--color=") && len(args) < 3 {
 		return errors.New("error")
 	}
-	checkColorInTheFlag := strings.Split(args[1], "=")
-	if len(checkColorInTheFlag) > 1 && checkColorInTheFlag[1] == "" {
-		return errors.New("error")
+	if strings.HasPrefix(args[1], "--color=") {
+		checkColorInTheFlag := strings.Split(args[1], "=")
+		if len(checkColorInTheFlag) > 1 && checkColorInTheFlag[1] == "" {
+			return errors.New("error")
+		}
+		color := checkColorInTheFlag[1]
+		if color != "" {
+			if err := validColors(color); err != nil {
+				return err
+			}
+		}
 	}
-
 	return nil
 
 }
@@ -43,5 +50,21 @@ func validateColorFlag(args []string) error {
 		}
 
 	}
+	return nil
+}
+func validColors(color string) error {
+	allowedColors := map[string]bool{
+		"red":     true,
+		"green":   true,
+		"yellow":  true,
+		"orange":  true,
+		"blue":    true,
+		"magenta": true,
+	}
+	_, exists := allowedColors[color]
+	if !exists {
+		return errors.New("error")
+	}
+
 	return nil
 }
