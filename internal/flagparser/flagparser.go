@@ -6,6 +6,7 @@ import (
 )
 
 func ParseArgs(args []string) error {
+	count := 0
 	if len(args) < 2 {
 		return errors.New("error")
 	}
@@ -15,7 +16,14 @@ func ParseArgs(args []string) error {
 	if err := validateColorFlag(args); err != nil {
 		return err
 	}
-
+	for i := 0; i < len(args); i++ {
+		if strings.HasPrefix(args[i], "--color=") {
+			count++
+			if count > 1 {
+				return errors.New("error")
+			}
+		}
+	}
 	if strings.HasPrefix(args[1], "--color=") && len(args) < 3 {
 		return errors.New("error")
 	}
