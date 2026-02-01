@@ -106,3 +106,17 @@ func TestParseArgs_ValidRGBColor(t *testing.T) {
 		t.Errorf("unexpected error")
 	}
 }
+func TestParseArgs_ValidHexColor(t *testing.T) {
+	args := []string{"program", "--color=#ff0000", "text"}
+	err := flagparser.ParseArgs(args)
+	if err != nil {
+		t.Errorf("error")
+	}
+}
+func TestParseArgs_InvalidColorStillPasses(t *testing.T) {
+	args := []string{"program", "--color=purple", "text"}
+	err := flagparser.ParseArgs(args)
+	if err != nil {
+		t.Errorf("error")
+	}
+}
