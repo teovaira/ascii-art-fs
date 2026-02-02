@@ -113,3 +113,24 @@ func TestParseArgs_ValidHexColor(t *testing.T) {
 		t.Errorf("unexpected error for valid HEX color:%v", err)
 	}
 }
+func TestParseArgs_InvalidRGB_OutOfRange(t *testing.T) {
+	args := []string{"program", "--color=rgb(300,0,0)", "text"}
+	err := flagparser.ParseArgs(args)
+	if err == nil {
+		t.Errorf("expected error for RGB value out of range")
+	}
+}
+func TestParseArgs_InvalidHexLength(t *testing.T) {
+	args := []string{"program", "--color=#123", "text"}
+	err := flagparser.ParseArgs(args)
+	if err == nil {
+		t.Errorf("expected error for invalid HEX length")
+	}
+}
+func TestParseArgs_InvalidColorName(t *testing.T) {
+	args := []string{"program", "--color=pink", "text"}
+	err := flagparser.ParseArgs(args)
+	if err == nil {
+		t.Errorf("expected error for unsupported color name")
+	}
+}

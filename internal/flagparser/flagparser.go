@@ -1,3 +1,11 @@
+// Package flagparser validates command-line arguments for the ascii-art-color program.
+//
+// It ensures:
+//   - correct number of arguments
+//   - correct position and syntax of the --color flag
+//   - valid color formats (named colors, RGB, or HEX)
+//
+// Any invalid input results in a usage error.
 package flagparser
 
 import (
@@ -14,24 +22,33 @@ const (
 
 var errUsage = errors.New("Usage: go run . [OPTION] [STRING]")
 
+// ParseArgs validates the provided command-line arguments.
+//
+// Rules enforced:
+//   - arguments count must be within allowed limits
+//   - the --color flag, if present, must be the second argument
+//   - only one --color flag is allowed
+//   - the color value must be valid (named, RGB, or HEX)
+//
+// It returns an error if the arguments do not follow the expected format.
 func ParseArgs(args []string) error {
-	count := 0
+	colorFlagCount := 0
 	if len(args) < minimumArgs {
 		return errUsage
 	}
 	if len(args) > maximumArgs {
 		return errUsage
 	}
-	if err := validateColorFlag(args); err != nil {
+	if err := validateColorFlagSyntax(args); err != nil {
 		return errUsage
 	}
 	for i, arg := range args {
 		if strings.HasPrefix(arg, "--color=") {
-			count++
+			colorFlagCount++
 			if i != 1 {
 				return errUsage
 			}
-			if count > 1 {
+			if colorFlagCount > 1 {
 				return errUsage
 			}
 		}
@@ -54,13 +71,20 @@ func ParseArgs(args []string) error {
 	return nil
 
 }
-func validateColorFlag(args []string) error {
-	isItAFlag := strings.HasPrefix(args[1], "-")
-	if isItAFlag {
 
-		firstTwoLetters := strings.HasPrefix(args[1], "--")
+// validateColorFlagSyntax checks the syntactic correctness of the --color flag.
+//
+// It validates that:
+//   - the flag starts with '--'
+//   - the flag contains an '=' separator
+//
+// This function does not validate the color value itself.
+func validateColorFlagSyntax(args []string) error {
+	isFlag := strings.HasPrefix(args[1], "-")
+	if isFlag {
+		hasDoubleDash := strings.HasPrefix(args[1], "--")
 
-		if !firstTwoLetters {
+		if !hasDoubleDash {
 			return errUsage
 		}
 
@@ -72,6 +96,15 @@ func validateColorFlag(args []string) error {
 	}
 	return nil
 }
+
+// validColors validates the color value provided to the --color flag.
+//
+// Supported formats:
+//   - predefined color names (red, green, blue, etc.)
+//   - RGB format: rgb(r,g,b) where each value is 0–255
+//   - HEX format: #RRGGBB
+//
+// It returns a descriptive error for any invalid format.
 func validColors(color string) error {
 	allowedColors := map[string]bool{
 		"red":     true,
