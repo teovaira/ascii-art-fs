@@ -156,3 +156,24 @@ func TestParseArgs_InvalidColorName(t *testing.T) {
 		t.Errorf("expected error for unsupported color name")
 	}
 }
+func TestParseArgs_ValidBannerWithColor(t *testing.T) {
+	args := []string{"program", "--color=red", "text", "standard"}
+	err := flagparser.ParseArgs(args)
+	if err != nil {
+		t.Errorf("unexpected error for valid banner with color: %v", err)
+	}
+}
+func TestParseArgs_ValidBannerWithoutColor(t *testing.T) {
+	args := []string{"program", "text", "standard"}
+	err := flagparser.ParseArgs(args)
+	if err != nil {
+		t.Errorf("unexpected error for valid banner with color: %v", err)
+	}
+}
+func TestParseArgs_InValidBanner(t *testing.T) {
+	args := []string{"program", "text", "cosmic"}
+	err := flagparser.ParseArgs(args)
+	if err == nil {
+		t.Errorf("expected error for unsupported banner")
+	}
+}
