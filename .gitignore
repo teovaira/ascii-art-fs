@@ -40,3 +40,8 @@ coverage.html
 *.prof
 cpu.prof
 mem.prof
+
+# Project spec and audit docs (not for repo)
+SPEC.md
+OFFICIAL_AUDITS.md
+CLAUDE.md
