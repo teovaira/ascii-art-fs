@@ -150,7 +150,7 @@ func TestParseArgs_InvalidHexLength(t *testing.T) {
 
 // TestParseArgs_InvalidColorName verifies that unsupported color names are rejected.
 func TestParseArgs_InvalidColorName(t *testing.T) {
-	args := []string{"program", "--color=pink", "text"}
+	args := []string{"program", "--color=tirquaz", "text"}
 	err := flagparser.ParseArgs(args)
 	if err == nil {
 		t.Errorf("expected error for unsupported color name")

@@ -83,12 +83,19 @@ func ParseArgs(args []string) error {
 // It returns a descriptive error for any invalid format.
 func validColors(color string) error {
 	allowedColors := map[string]bool{
+		"black":   true,
 		"red":     true,
 		"green":   true,
 		"yellow":  true,
 		"orange":  true,
 		"blue":    true,
 		"magenta": true,
+		"cyan":    true,
+		"white":   true,
+		"purple":  true,
+		"pink":    true,
+		"brown":   true,
+		"gray":    true,
 	}
 	if _, exists := allowedColors[color]; exists {
 		return nil
