@@ -24,3 +24,22 @@ func TestFindPositions_SingleOccurrence(t *testing.T) {
 		}
 	}
 }
+func TestFindPositions_MultiCharacterSubstring(t *testing.T) {
+	text := "kitten"
+	substring := "kit"
+	expected := []bool{true, true, true, false, false, false}
+	output := coloring.FindPositions(text, substring)
+	if len(output) != len(expected) {
+		t.Fatalf("expected length %d,got %d", len(expected), len(output))
+	}
+	for i := range expected {
+		if output[i] != expected[i] {
+			t.Errorf(
+				"at index %d: expected %v,got %v",
+				i,
+				expected[i],
+				output[i],
+			)
+		}
+	}
+}
