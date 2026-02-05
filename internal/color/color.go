@@ -1,16 +1,15 @@
 // Package color parses color specifications into ANSI 24-bit terminal escape codes.
-
+//
 // Supported formats:
 //   - Named colors: black, red, green, yellow, blue, magenta, cyan, white,
 //     orange, purple, pink, brown, gray (case-insensitive)
 //   - Hex: #RRGGBB (e.g. #ff0000)
 //   - RGB: rgb(R, G, B) (e.g. rgb(255, 0, 0))
-
+//
 // Example:
-
-// 	rgb, _ := Parse("red")
-// 	fmt.Print(color.ANSI(rgb) + "Hello" + "\033[0m")
-
+//
+//	rgb, _ := Parse("red")
+//	fmt.Print(color.ANSI(rgb) + "Hello" + "\033[0m")
 package color
 
 import (
@@ -22,14 +21,8 @@ import (
 
 const (
 	rgbComponents = 3
-	hexLen        = 7
 	decimalBase   = 10
 	hexBase       = 16
-	hexRStart     = 1
-	hexREnd       = 3
-	hexGStart     = 3
-	hexGEnd       = 5
-	hexBStart     = 5
 	uint8Bits     = 8
 	ansi24BitFmt  = "\033[38;2;%d;%d;%dm"
 )
@@ -55,9 +48,16 @@ var namedColors = map[string]RGB{
 	"gray":    {128, 128, 128},
 }
 
-// Parse converts a color specification string into RGB.
+// ErrInvalidFormat is returned when color specification is malformed.
 var ErrInvalidFormat = errors.New("invalid color format")
 
+// Parse converts color specification to RGB.
+//
+// Named (case-insensitive): red, green, blue, orange, purple, etc.
+// Hex: #RRGGBB (e.g. #ff0000)
+// RGB: rgb(R,G,B) (e.g. rgb(255,0,0))
+//
+// Returns ErrInvalidFormat for invalid input.
 func Parse(colorSpec string) (RGB, error) {
 	colorSpec = strings.TrimSpace(colorSpec)
 

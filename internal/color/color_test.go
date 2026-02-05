@@ -31,6 +31,8 @@ func TestParse(t *testing.T) {
 		{"hex_invalid_length_short", "#ff0", color.RGB{}, true},
 		{"hex_invalid_length_long", "#ff000000", color.RGB{}, true},
 		{"hex_invalid_chars", "#gg0000", color.RGB{}, true},
+		{"hex_invalid_green", "#ffgg00", color.RGB{}, true},
+		{"hex_invalid_blue", "#ffffzz", color.RGB{}, true},
 
 		// RGB
 		{"rgb_red", "rgb(255, 0, 0)", color.RGB{255, 0, 0}, false},
