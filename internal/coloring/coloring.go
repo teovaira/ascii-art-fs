@@ -1,109 +1,83 @@
-// Package coloring provides utilities for colorizing
-// matching substrings in ASCII art.
-//
-// The coloring package is responsible for identifying
-// substring occurrences in the input text and applying
-// ANSI color codes to the corresponding characters
-// in the rendered ASCII art.
+// Package coloring provides utilities for colorizing matching substrings in ASCII art.
+// It handles the translation between character indexes in plain text and
+// column offsets in the rendered ASCII representation.
 package coloring
 
-// ApplyColor colorizes all characters in asciiArt that
-// correspond to occurrences of substring in text.
-func ApplyColor(
-	asciiArt []string,
-	text string,
-	substring string,
-	colorCode string,
-	charWidths []int,
-) []string {
+import (
+	"strings"
+)
 
-	if len(asciiArt) == 0 {
+// Reset is the ANSI escape sequence to stop applying color.
+const Reset = "\033[0m"
+
+// ApplyColor applies ANSI color codes to occurrences of a substring within ASCII art.
+// It maps text-based matching positions to ASCII art column widths and inserts
+// the provided colorCode at the start of matches and the Reset code at the end.
+func ApplyColor(asciiArt []string, text, substring, colorCode string, charWidths []int) []string {
+	if len(asciiArt) == 0 || len(charWidths) == 0 || len(text) == 0 || substring == "" {
 		return asciiArt
 	}
 
 	positions := findPositions(text, substring)
-	reset := "\033[0m"
 	result := make([]string, len(asciiArt))
 
 	for i, line := range asciiArt {
-		out := ""
-		offset := 0
-		inColor := false
-
-		for idx := 0; idx < len(positions) && idx < len(charWidths); idx++ {
-			if offset >= len(line) {
-				break
-			}
-
-			end := offset + charWidths[idx]
-			if end > len(line) {
-				end = len(line)
-			}
-
-			start :=
-				positions[idx] &&
-					(substring == "" ||
-						idx == 0 ||
-						!positions[idx-1] ||
-						(idx+len(substring) <= len(text) &&
-							text[idx:idx+len(substring)] == substring))
-
-			if start {
-				out += colorCode
-				inColor = true
-			}
-
-			out += line[offset:end]
-
-			if inColor && (substring == "" ||
-				idx+1 >= len(positions) ||
-				!positions[idx+1]) {
-
-				out += reset
-				inColor = false
-			}
-
-			offset = end
-		}
-
-		if offset < len(line) {
-			out += line[offset:]
-		}
-
-		result[i] = out
+		result[i] = colorLine(line, positions, charWidths, colorCode)
 	}
 
 	return result
 }
 
-// findPositions determines which character positions in a text
-// string belong to occurrences of a given substring.
-func findPositions(text string, substring string) []bool {
-	result := make([]bool, len(text))
+// colorLine processes a single line of ASCII art to apply color codes.
+func colorLine(line string, positions []bool, charWidths []int, colorCode string) string {
+	var builder strings.Builder
+	offset := 0
 
-	if len(substring) == 0 {
-		for i := range result {
-			result[i] = true
+	for idx, width := range charWidths {
+		if offset >= len(line) {
+			break
 		}
-		return result
+
+		end := offset + width
+		if end > len(line) {
+			end = len(line)
+		}
+
+		isStart := positions[idx] && (idx == 0 || !positions[idx-1])
+		isEnd := positions[idx] && (idx == len(positions)-1 || !positions[idx+1])
+
+		if isStart {
+			builder.WriteString(colorCode)
+		}
+
+		builder.WriteString(line[offset:end])
+
+		if isEnd {
+			builder.WriteString(Reset)
+		}
+
+		offset = end
 	}
 
-	for i := 0; i <= len(text)-len(substring); i++ {
-		match := true
+	if offset < len(line) {
+		builder.WriteString(line[offset:])
+	}
 
-		for p := 0; p < len(substring); p++ {
-			if text[i+p] != substring[p] {
-				match = false
-				break
-			}
-		}
+	return builder.String()
+}
 
-		if match {
-			for p := 0; p < len(substring); p++ {
-				result[i+p] = true
+// findPositions identifies which character indexes in the text match the substring.
+// It returns a boolean slice of the same length as text where true indicates a match.
+func findPositions(text, substring string) []bool {
+	positions := make([]bool, len(text))
+	subLen := len(substring)
+
+	for i := 0; i <= len(text)-subLen; i++ {
+		if text[i:i+subLen] == substring {
+			for j := 0; j < subLen; j++ {
+				positions[i+j] = true
 			}
 		}
 	}
-
-	return result
+	return positions
 }
