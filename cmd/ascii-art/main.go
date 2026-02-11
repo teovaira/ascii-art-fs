@@ -28,6 +28,7 @@ const (
 	exitCodeUsageError  = 1
 	exitCodeBannerError = 2
 	exitCodeRenderError = 3
+	exitCodeColorError  = 4
 
 	// Default banner style.
 	defaultBanner = "standard"
