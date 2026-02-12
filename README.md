@@ -1,5 +1,7 @@
 # ascii-art-color
 
+![CI](https://github.com/teovaira/ascii-art-color/actions/workflows/ci.yml/badge.svg)
+
 ASCII Art Generator with ANSI Color Support - Convert text strings into ASCII art using predefined banner styles (standard, shadow, thinkertoy), with optional 24-bit color for full text or specific substrings.
 
 ## Features
