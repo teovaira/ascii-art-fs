@@ -31,6 +31,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive integration tests for color mode (18 test cases)
 - Unit tests for all new functions and packages
 - `run-color` Makefile target
+- CI workflow (`.github/workflows/ci.yml`) with test, lint, and build jobs
+  - Test matrix: Go 1.21/1.22 on Ubuntu, macOS, and Windows
+  - Lint: golangci-lint v2.1.6
+  - Build verification on Ubuntu
+- Release workflow (`.github/workflows/release.yml`) for automated binary distribution
+  - Triggered on `v*` tags
+  - Builds cross-platform binaries (Linux, macOS, Windows)
+  - Creates GitHub Release with all binaries attached
+- CI status badge in README.md
 
 ### Changed
 - Project restructured to `cmd/internal` layout
