@@ -54,7 +54,7 @@ This project is part of the Zone01 curriculum. We expect all contributors to:
    go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
    ```
 
-   Verify installation:
+5. **Verify installation**
    ```bash
    golangci-lint --version  # Should show v2.x.x
    ```
@@ -460,7 +460,7 @@ ascii-art-color/
 
 ## License
 
-This project is part of the Zone01 curriculum.
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
