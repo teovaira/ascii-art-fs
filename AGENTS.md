@@ -13,7 +13,7 @@ This is a Go CLI application that converts text to ASCII art using three banner 
 
 # Build the project
 make build
-# or: go build -o ascii-art ./cmd/ascii-art
+# or: go build -o ascii-art-color ./cmd/ascii-art
 
 # Run the application (normal mode)
 cd cmd/ascii-art && go run . "Hello" standard
@@ -61,8 +61,11 @@ make coverage
 
 ## Testing Standards
 
-### Test Organization
+### Methodology
+- Follow TDD (Test-Driven Development): write a failing test first, then implement to make it pass
 - Use table-driven tests for multiple scenarios
+
+### Test Organization
 - Test files: `*_test.go` in same package
 - Integration tests: `integration_test.go` in main package
 
@@ -147,7 +150,7 @@ ascii-art-color/
 
 ### Error Handling
 - Never expose internal paths in error messages
-- Wrap errors with context using `fmt.Errorf`
+- Wrap errors with context using `fmt.Errorf` and verb `%w`
 - Use proper exit codes: 0 (success), 1 (usage), 2 (banner error), 3 (render error), 4 (color error)
 
 ## Commit Message Format
