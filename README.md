@@ -135,6 +135,10 @@ make run-color
 
 ```
 ascii-art-color/
+├── .github/
+│   └── workflows/
+│       ├── ci.yml             # CI workflow (test, lint, build)
+│       └── release.yml        # Release workflow (cross-platform binaries)
 ├── .gitignore                 # Git ignore rules
 ├── .golangci.yml              # Linter configuration
 ├── LICENSE                    # Project license
