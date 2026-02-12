@@ -89,6 +89,10 @@ func TestFunctionName_Scenario(t *testing.T) {
 
 ```
 ascii-art-color/
+├── .github/
+│   └── workflows/
+│       ├── ci.yml             # CI workflow (test, lint, build)
+│       └── release.yml        # Release workflow (cross-platform binaries)
 ├── .gitignore                 # Git ignore rules
 ├── .golangci.yml              # Linter configuration
 ├── LICENSE                    # Project license
@@ -156,9 +160,9 @@ Use Conventional Commits format:
 [optional body]
 ```
 
-**Types**: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`, `build`
+**Types**: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`, `build`, `ci`
 
-**Scopes**: `parser`, `renderer`, `main`, `color`, `coloring`, `flagparser`, `docs`, `build`, `tests`
+**Scopes**: `parser`, `renderer`, `main`, `color`, `coloring`, `flagparser`, `docs`, `build`, `tests`, `workflows`
 
 **Example**:
 ```
@@ -176,9 +180,22 @@ make build          # Current platform
 make build-all      # All platforms (Linux, macOS, Windows)
 ```
 
+### CI/CD (GitHub Actions)
+
+Automated checks run on every push and pull request to `main` and `develop`:
+
+- **Test**: Runs `go test ./...` across a matrix of Go 1.21/1.22 on Ubuntu, macOS, and Windows
+- **Lint**: Runs `golangci-lint` (v2.1.6) on Ubuntu using `.golangci.yml`
+- **Build**: Verifies compilation with `go build ./cmd/ascii-art` on Ubuntu
+
+Workflows are defined in `.github/workflows/`:
+- `ci.yml` — test, lint, and build jobs (triggered on push/PR)
+- `release.yml` — builds cross-platform binaries and creates a GitHub Release (triggered on `v*` tags)
+
 ### Version Management
 - Use semantic versioning (MAJOR.MINOR.PATCH)
 - Version info injected via Makefile ldflags from git tags
+- Tag a release (e.g. `git tag v1.1.0`) to trigger the release workflow
 - Update CHANGELOG.md for all releases
 
 ## Performance Guidelines
@@ -231,6 +248,7 @@ Before committing, ensure:
 - [ ] Documentation updated
 - [ ] CHANGELOG.md updated (if applicable)
 - [ ] Conventional commit message used
+- [ ] CI passes (test, lint, build) on push/PR
 
 ---
 

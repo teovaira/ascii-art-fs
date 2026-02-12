@@ -33,7 +33,7 @@ COLOUR_END=\033[0m
 # HELPERS
 # ==================================================================================== #
 
-## help: Display this help message
+## help: Displays all available commands with a short description of what they do
 .PHONY: help
 help:
 	@echo ''
@@ -197,7 +197,6 @@ clean:
 	@echo "${COLOUR_BLUE}Cleaning...${COLOUR_END}"
 	@rm -rf $(BUILD_DIR)
 	@rm -f $(COVERAGE_FILE) $(COVERAGE_HTML)
-	@rm -f cpu.prof mem.prof
 	@go clean
 	@echo "${COLOUR_GREEN}✓ Cleaned${COLOUR_END}"
 
@@ -206,7 +205,6 @@ clean:
 clean-all: clean
 	@echo "${COLOUR_BLUE}Deep cleaning...${COLOUR_END}"
 	@go clean -testcache
-	@go clean -modcache
 	@echo "${COLOUR_GREEN}✓ Deep cleaned${COLOUR_END}"
 
 # ==================================================================================== #
