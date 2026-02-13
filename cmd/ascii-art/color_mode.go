@@ -79,14 +79,9 @@ func runColorMode(args []string) {
 	}
 }
 
-// hasColorFlag checks whether any argument contains the --color= flag.
+// hasColorFlag checks whether the first user argument attempts to use --color.
 func hasColorFlag(args []string) bool {
-	for _, arg := range args {
-		if strings.HasPrefix(arg, "--color=") {
-			return true
-		}
-	}
-	return false
+	return len(args) > 1 && strings.HasPrefix(args[1], "--color")
 }
 
 // extractColorArgs extracts color spec, substring, text, and banner from color-mode arguments.
