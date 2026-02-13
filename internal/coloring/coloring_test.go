@@ -1,6 +1,3 @@
-// Package coloring_test contains unit tests for the coloring package.
-// Tests verify ANSI color application to ASCII art lines, including
-// substring matching, variable character widths, and edge cases.
 package coloring_test
 
 import (

@@ -1,14 +1,9 @@
-// Package parser provides tests for the banner parser functionality.
-// Tests verify correct loading and parsing of ASCII art banner files
-// in standard, shadow, and thinkertoy formats.
 package parser
 
 import (
 	"testing"
 )
 
-// TestLoadBannerSpaceChar verifies that the space character loads correctly
-// from the shadow banner file.
 func TestLoadBannerSpaceChar(t *testing.T) {
 	banner, err := LoadBanner("../../cmd/ascii-art/testdata/shadow.txt")
 	if err != nil {
@@ -43,8 +38,6 @@ func TestLoadBannerSpaceChar(t *testing.T) {
 	}
 }
 
-// TestLoadBannerMissingFile verifies that LoadBanner returns an error
-// when the specified banner file does not exist.
 func TestLoadBannerMissingFile(t *testing.T) {
 	_, err := LoadBanner("../../cmd/ascii-art/testdata/nope.txt")
 	if err == nil {
@@ -52,8 +45,6 @@ func TestLoadBannerMissingFile(t *testing.T) {
 	}
 }
 
-// TestLoadBannerExclamationChar verifies that the exclamation mark
-// loads correctly from the shadow banner file.
 func TestLoadBannerExclamationChar(t *testing.T) {
 	banner, err := LoadBanner("../../cmd/ascii-art/testdata/shadow.txt")
 	if err != nil {
@@ -84,8 +75,6 @@ func TestLoadBannerExclamationChar(t *testing.T) {
 	}
 }
 
-// TestLoadBannerStandardSpace verifies that the space character loads
-// correctly from the standard banner file.
 func TestLoadBannerStandardSpace(t *testing.T) {
 	banner, err := LoadBanner("../../cmd/ascii-art/testdata/standard.txt")
 	if err != nil {
@@ -117,8 +106,6 @@ func TestLoadBannerStandardSpace(t *testing.T) {
 	}
 }
 
-// TestLoadBannerShadowA verifies that the letter 'A' loads correctly
-// from the shadow banner file.
 func TestLoadBannerShadowA(t *testing.T) {
 	banner, err := LoadBanner("../../cmd/ascii-art/testdata/shadow.txt")
 	if err != nil {
@@ -152,8 +139,6 @@ func TestLoadBannerShadowA(t *testing.T) {
 	}
 }
 
-// TestLoadBannerEmptyFile verifies that LoadBanner returns an error
-// when given an empty banner file (0 lines).
 func TestLoadBannerEmptyFile(t *testing.T) {
 	_, err := LoadBanner("../../cmd/ascii-art/testdata/empty.txt")
 	if err == nil {
@@ -161,8 +146,6 @@ func TestLoadBannerEmptyFile(t *testing.T) {
 	}
 }
 
-// TestLoadBannerCorruptedFile verifies that LoadBanner returns an error
-// when given a corrupted banner file with too few lines.
 func TestLoadBannerCorruptedFile(t *testing.T) {
 	_, err := LoadBanner("../../cmd/ascii-art/testdata/corrupted.txt")
 	if err == nil {
@@ -170,8 +153,6 @@ func TestLoadBannerCorruptedFile(t *testing.T) {
 	}
 }
 
-// TestLoadBannerOversizedFile verifies that LoadBanner returns an error
-// when given an oversized banner file with too many lines.
 func TestLoadBannerOversizedFile(t *testing.T) {
 	_, err := LoadBanner("../../cmd/ascii-art/testdata/oversized.txt")
 	if err == nil {
@@ -179,8 +160,6 @@ func TestLoadBannerOversizedFile(t *testing.T) {
 	}
 }
 
-// TestLoadBannerThinkertoy verifies that the thinkertoy banner file
-// loads correctly with all 95 ASCII characters (32-126).
 func TestLoadBannerThinkertoy(t *testing.T) {
 	banner, err := LoadBanner("../../cmd/ascii-art/testdata/thinkertoy.txt")
 	if err != nil {
@@ -191,8 +170,6 @@ func TestLoadBannerThinkertoy(t *testing.T) {
 	}
 }
 
-// TestLoadBannerNumbers verifies that all digits 0-9 load correctly
-// from the standard banner file with exactly 8 lines each.
 func TestLoadBannerNumbers(t *testing.T) {
 	banner, err := LoadBanner("../../cmd/ascii-art/testdata/standard.txt")
 	if err != nil {
@@ -212,8 +189,6 @@ func TestLoadBannerNumbers(t *testing.T) {
 	}
 }
 
-// TestLoadBannerCompleteCharacterSet verifies that all 95 printable
-// ASCII characters (32-126) load correctly with exactly 8 lines each.
 func TestLoadBannerCompleteCharacterSet(t *testing.T) {
 	banner, err := LoadBanner("../../cmd/ascii-art/testdata/standard.txt")
 	if err != nil {
@@ -237,11 +212,7 @@ func TestLoadBannerCompleteCharacterSet(t *testing.T) {
 	}
 }
 
-// TestCharWidths verifies that CharWidths returns the correct column width
-// for each character in the input text based on the banner glyph data.
 func TestCharWidths(t *testing.T) {
-	// Build a minimal banner with known glyph widths.
-	// All 8 lines of each glyph have the same width (banner format guarantee).
 	banner := Banner{
 		'H': {"_    _ ", "_|  |_ ", "_|  |_ ", "|_  _| ", " |  |  ", " |  |  ", "       ", "       "},
 		'i': {"   ", "   ", " _ ", "| |", "| |", "|_|", "   ", "   "},
@@ -326,7 +297,6 @@ func TestCharWidths(t *testing.T) {
 	}
 }
 
-// TestCharWidths_EmptyBanner verifies CharWidths handles an empty banner map gracefully.
 func TestCharWidths_EmptyBanner(t *testing.T) {
 	banner := Banner{}
 	widths := CharWidths("Hello", banner)
@@ -341,8 +311,6 @@ func TestCharWidths_EmptyBanner(t *testing.T) {
 	}
 }
 
-// TestCharWidths_RealBanners verifies CharWidths with actual loaded banner data
-// from all three banner files (standard, shadow, thinkertoy).
 func TestCharWidths_RealBanners(t *testing.T) {
 	bannerFiles := []struct {
 		name string
@@ -382,8 +350,6 @@ func TestCharWidths_RealBanners(t *testing.T) {
 	}
 }
 
-// TestCharWidths_ConsistentGlyphLines verifies that all 8 lines of each glyph
-// have the same width, which is the assumption CharWidths relies on.
 func TestCharWidths_ConsistentGlyphLines(t *testing.T) {
 	bannerFiles := []struct {
 		name string
@@ -419,15 +385,12 @@ func TestCharWidths_ConsistentGlyphLines(t *testing.T) {
 	}
 }
 
-// TestLoadBannerAllSpecialCharacters verifies that all special characters
-// (punctuation, symbols, etc.) load correctly from the banner file.
 func TestLoadBannerAllSpecialCharacters(t *testing.T) {
 	banner, err := LoadBanner("../../cmd/ascii-art/testdata/standard.txt")
 	if err != nil {
 		t.Fatalf("LoadBanner failed: %v", err)
 	}
 
-	// Test all ASCII special characters
 	specials := `!"#$%&'()*+,-./:;<=>?@[\]^_{|}~` + "`"
 
 	for _, ch := range specials {

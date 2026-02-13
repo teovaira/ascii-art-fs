@@ -1,5 +1,3 @@
-// Package main_test provides integration tests for the ascii-art application.
-// These tests verify end-to-end functionality by running the actual program.
 package main
 
 import (
@@ -8,7 +6,6 @@ import (
 	"testing"
 )
 
-// TestMainProgram_Integration verifies end-to-end program execution with various inputs.
 func TestMainProgram_Integration(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -21,9 +18,7 @@ func TestMainProgram_Integration(t *testing.T) {
 			args:        []string{"Hello"},
 			expectError: false,
 			checkOutput: func(output string) bool {
-				// Should have 8 lines
-				lines := strings.Count(output, "\n")
-				return lines == 8
+				return strings.Count(output, "\n") == 8
 			},
 		},
 		{
@@ -31,7 +26,6 @@ func TestMainProgram_Integration(t *testing.T) {
 			args:        []string{""},
 			expectError: false,
 			checkOutput: func(output string) bool {
-				// Should have no output (spec requirement)
 				return output == ""
 			},
 		},
@@ -40,9 +34,7 @@ func TestMainProgram_Integration(t *testing.T) {
 			args:        []string{"Hi", "shadow"},
 			expectError: false,
 			checkOutput: func(output string) bool {
-				// Should have 8 lines
-				lines := strings.Count(output, "\n")
-				return lines == 8
+				return strings.Count(output, "\n") == 8
 			},
 		},
 		{
@@ -50,9 +42,7 @@ func TestMainProgram_Integration(t *testing.T) {
 			args:        []string{"Go", "thinkertoy"},
 			expectError: false,
 			checkOutput: func(output string) bool {
-				// Should have 8 lines
-				lines := strings.Count(output, "\n")
-				return lines == 8
+				return strings.Count(output, "\n") == 8
 			},
 		},
 		{
@@ -60,9 +50,7 @@ func TestMainProgram_Integration(t *testing.T) {
 			args:        []string{"Hello World"},
 			expectError: false,
 			checkOutput: func(output string) bool {
-				// Should have 8 lines and contain space
-				lines := strings.Count(output, "\n")
-				return lines == 8 && len(output) > 0
+				return strings.Count(output, "\n") == 8 && len(output) > 0
 			},
 		},
 		{
@@ -70,9 +58,7 @@ func TestMainProgram_Integration(t *testing.T) {
 			args:        []string{"Hello\nWorld"},
 			expectError: false,
 			checkOutput: func(output string) bool {
-				// Should have 16 lines (8 per text line)
-				lines := strings.Count(output, "\n")
-				return lines == 16
+				return strings.Count(output, "\n") == 16
 			},
 		},
 		{
@@ -97,14 +83,10 @@ func TestMainProgram_Integration(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			// Build command
 			args := append([]string{"run", "main.go"}, tt.args...)
 			cmd := exec.Command("go", args...)
-
-			// Run command
 			output, err := cmd.CombinedOutput()
 
-			// Check error expectation
 			if tt.expectError && err == nil {
 				t.Errorf("Expected error but got none")
 			}
@@ -112,7 +94,6 @@ func TestMainProgram_Integration(t *testing.T) {
 				t.Errorf("Unexpected error: %v\nOutput: %s", err, output)
 			}
 
-			// Check output if provided
 			if !tt.expectError && tt.checkOutput != nil {
 				if !tt.checkOutput(string(output)) {
 					t.Errorf("Output check failed.\nOutput:\n%s", output)
@@ -122,7 +103,6 @@ func TestMainProgram_Integration(t *testing.T) {
 	}
 }
 
-// TestRunColorMode verifies end-to-end color mode execution with various inputs.
 func TestRunColorMode(t *testing.T) {
 	tests := []struct {
 		name        string
@@ -207,7 +187,6 @@ func TestRunColorMode(t *testing.T) {
 			name: "substring not found in text",
 			args: []string{"--color=red", "xyz", "Hello"},
 			checkOutput: func(output string) bool {
-				// No color codes should be in output since substring doesn't match.
 				return !strings.Contains(output, "\033[38;2;") &&
 					strings.Count(output, "\n") == 8
 			},
@@ -285,9 +264,7 @@ func TestRunColorMode(t *testing.T) {
 	}
 }
 
-// TestMainProgram_RealBannerFiles verifies program works with all banner files.
 func TestMainProgram_RealBannerFiles(t *testing.T) {
-	// This test requires banner files to exist
 	banners := []string{"standard", "shadow", "thinkertoy"}
 
 	for _, banner := range banners {
@@ -300,12 +277,10 @@ func TestMainProgram_RealBannerFiles(t *testing.T) {
 					banner, err, output)
 			}
 
-			// Verify output has content
 			if len(output) == 0 {
 				t.Errorf("Expected output for banner %s, got empty", banner)
 			}
 
-			// Verify correct number of lines
 			lines := strings.Count(string(output), "\n")
 			if lines != 8 {
 				t.Errorf("Expected 8 lines for banner %s, got %d", banner, lines)
@@ -314,7 +289,6 @@ func TestMainProgram_RealBannerFiles(t *testing.T) {
 	}
 }
 
-// TestMainProgram_ErrorHandling verifies program handles error cases correctly.
 func TestMainProgram_ErrorHandling(t *testing.T) {
 	errorTests := []struct {
 		name     string

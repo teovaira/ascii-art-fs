@@ -1,12 +1,9 @@
-// Package main_test contains unit tests for the main package functions.
-// Tests verify command-line argument parsing and banner path resolution.
 package main
 
 import (
 	"testing"
 )
 
-// TestParseArgs_NoArguments verifies ParseArgs returns an error when no text argument is provided.
 func TestParseArgs_NoArguments(t *testing.T) {
 	args := []string{"./ascii-art"}
 
@@ -22,7 +19,6 @@ func TestParseArgs_NoArguments(t *testing.T) {
 	}
 }
 
-// TestParseArgs_TextOnly verifies ParseArgs defaults to "standard" banner when no banner is specified.
 func TestParseArgs_TextOnly(t *testing.T) {
 	args := []string{"./ascii-art", "Hello"}
 
@@ -41,7 +37,6 @@ func TestParseArgs_TextOnly(t *testing.T) {
 	}
 }
 
-// TestParseArgs_TextAndBanner verifies ParseArgs correctly parses both text and banner arguments.
 func TestParseArgs_TextAndBanner(t *testing.T) {
 	args := []string{"./ascii-art", "Hello", "shadow"}
 
@@ -60,7 +55,6 @@ func TestParseArgs_TextAndBanner(t *testing.T) {
 	}
 }
 
-// TestParseArgs_TooManyArguments verifies ParseArgs returns an error when too many arguments are provided.
 func TestParseArgs_TooManyArguments(t *testing.T) {
 	args := []string{"./ascii-art", "Hello", "shadow", "extra"}
 
@@ -71,7 +65,6 @@ func TestParseArgs_TooManyArguments(t *testing.T) {
 	}
 }
 
-// TestParseArgs_AllBannerTypes verifies ParseArgs accepts all valid banner type names.
 func TestParseArgs_AllBannerTypes(t *testing.T) {
 	testCases := []struct {
 		args           []string
@@ -96,7 +89,6 @@ func TestParseArgs_AllBannerTypes(t *testing.T) {
 	}
 }
 
-// TestParseArgs_EmptyStringText verifies ParseArgs handles empty string as valid text input.
 func TestParseArgs_EmptyStringText(t *testing.T) {
 	args := []string{"./ascii-art", ""}
 
@@ -115,7 +107,6 @@ func TestParseArgs_EmptyStringText(t *testing.T) {
 	}
 }
 
-// TestHasColorFlag verifies detection of the --color= flag in argument lists.
 func TestHasColorFlag(t *testing.T) {
 	tests := []struct {
 		name string
@@ -141,7 +132,6 @@ func TestHasColorFlag(t *testing.T) {
 	}
 }
 
-// TestExtractColorArgs verifies extraction of color, substring, text, and banner from color-mode args.
 func TestExtractColorArgs(t *testing.T) {
 	tests := []struct {
 		name      string
@@ -232,7 +222,6 @@ func TestExtractColorArgs(t *testing.T) {
 	}
 }
 
-// TestGetBannerPath_ValidBanners verifies GetBannerPath correctly maps banner names to file paths.
 func TestGetBannerPath_ValidBanners(t *testing.T) {
 	testCases := []struct {
 		banner       string
@@ -257,7 +246,6 @@ func TestGetBannerPath_ValidBanners(t *testing.T) {
 	}
 }
 
-// TestGetBannerPath_InvalidBanner verifies GetBannerPath returns an error for invalid banner names.
 func TestGetBannerPath_InvalidBanner(t *testing.T) {
 	banner := "invalid"
 
