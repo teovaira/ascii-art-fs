@@ -323,3 +323,40 @@ func TestMainProgram_ErrorHandling(t *testing.T) {
 		})
 	}
 }
+
+func TestColorFlagFormatErrors_ShowColorUsage(t *testing.T) {
+	tests := []struct {
+		name string
+		args []string
+	}{
+		{
+			name: "missing equals in color flag",
+			args: []string{"--color", "red", "banana"},
+		},
+		{
+			name: "colon notation in color flag",
+			args: []string{"--color:red", "hello"},
+		},
+	}
+
+	usageLine := "Usage: go run . [OPTION] [STRING]"
+	exampleLine := "EX: go run . --color=<color> <substring to be colored> \"something\""
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cmd := exec.Command("go", append([]string{"run", "."}, tt.args...)...)
+			output, err := cmd.CombinedOutput()
+			if err == nil {
+				t.Fatalf("expected non-zero exit status, got nil")
+			}
+
+			out := string(output)
+			if !strings.Contains(out, usageLine) {
+				t.Fatalf("expected usage line %q in output, got: %s", usageLine, out)
+			}
+			if !strings.Contains(out, exampleLine) {
+				t.Fatalf("expected example line %q in output, got: %s", exampleLine, out)
+			}
+		})
+	}
+}
