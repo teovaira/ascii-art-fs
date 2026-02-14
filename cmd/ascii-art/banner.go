@@ -1,6 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"embed"
+	"fmt"
+	"io/fs"
+)
+
+// bannerFS embeds the testdata directory into the compiled binary.
+// This makes the binary fully self-contained and relocatable - it can be run
+// from any directory without requiring testdata files to exist on disk.
+// The embedded files are read-only and frozen at compile time.
+//
+//go:embed testdata/*.txt
+var bannerFS embed.FS
 
 var bannerPaths = map[string]string{
 	"standard":   "testdata/standard.txt",
@@ -33,4 +45,16 @@ func GetBannerPath(banner string) (string, error) {
 func isValidBanner(name string) bool {
 	_, exists := bannerPaths[name]
 	return exists
+}
+
+// GetBannerFS returns the embedded filesystem containing banner files.
+//
+// The filesystem is embedded at compile time and contains all banner files
+// from the testdata directory. This allows the binary to be fully relocatable
+// and run from any directory without requiring external data files.
+//
+// Returns:
+//   - An fs.FS interface to the embedded testdata directory.
+func GetBannerFS() fs.FS {
+	return bannerFS
 }
