@@ -360,3 +360,71 @@ func TestColorFlagFormatErrors_ShowColorUsage(t *testing.T) {
 		})
 	}
 }
+
+func TestBuiltBinary_FromRepoRoot(t *testing.T) {
+	buildCmd := exec.Command("go", "build", "-o", "../../bin/ascii-art-test", ".")
+	if err := buildCmd.Run(); err != nil {
+		t.Fatalf("failed to build binary: %v", err)
+	}
+
+	tests := []struct {
+		name        string
+		args        []string
+		expectError bool
+		checkOutput func(string) bool
+	}{
+		{
+			name:        "simple text with standard banner",
+			args:        []string{"Hi", "standard"},
+			expectError: false,
+			checkOutput: func(output string) bool {
+				return strings.Count(output, "\n") == 8 && len(output) > 0
+			},
+		},
+		{
+			name:        "with shadow banner",
+			args:        []string{"Test", "shadow"},
+			expectError: false,
+			checkOutput: func(output string) bool {
+				return strings.Count(output, "\n") == 8 && len(output) > 0
+			},
+		},
+		{
+			name:        "with thinkertoy banner",
+			args:        []string{"Go", "thinkertoy"},
+			expectError: false,
+			checkOutput: func(output string) bool {
+				return strings.Count(output, "\n") == 8 && len(output) > 0
+			},
+		},
+		{
+			name:        "invalid banner shows error",
+			args:        []string{"Hi", "notexist"},
+			expectError: true,
+			checkOutput: nil,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			cmd := exec.Command("../../bin/ascii-art-test", tt.args...)
+			output, err := cmd.CombinedOutput()
+
+			if tt.expectError {
+				if err == nil {
+					t.Errorf("expected error but got none\nOutput: %s", output)
+				}
+				return
+			}
+
+			if err != nil {
+				t.Errorf("unexpected error: %v\nOutput: %s", err, output)
+				return
+			}
+
+			if tt.checkOutput != nil && !tt.checkOutput(string(output)) {
+				t.Errorf("output check failed.\nOutput:\n%s", output)
+			}
+		})
+	}
+}
