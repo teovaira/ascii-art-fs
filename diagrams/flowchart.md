@@ -12,11 +12,13 @@ flowchart TD
     C --> E["GetBannerPath()\nbanner file path"]
     D --> F["extractColorArgs()\ncolorSpec, substring,\ntext, banner"]
 
-    E --> G["parser.LoadBanner()\nBanner map"]
+    E --> E2["GetBannerFS()\nembedded filesystem"]
+    E2 --> G["parser.LoadBanner(fsys, path)\nBanner map"]
     F --> H["color.Parse()\nRGB struct"]
 
     H --> I["GetBannerPath()\nbanner file path"]
-    I --> J["parser.LoadBanner()\nBanner map"]
+    I --> I2["GetBannerFS()\nembedded filesystem"]
+    I2 --> J["parser.LoadBanner(fsys, path)\nBanner map"]
     J --> K["color.ANSI()\nANSI escape code"]
 
     G --> L["renderer.ASCII()\nASCII art string"]

@@ -24,7 +24,7 @@ flowchart LR
 
     main -->|"validates args"| flagparser
     main -->|"parses color spec"| color
-    main -->|"loads banner file"| parser
+    main -->|"loads banner (embedded FS)"| parser
     main -->|"renders text"| renderer
     main -->|"applies color"| coloring
 
@@ -41,7 +41,7 @@ flowchart LR
 | CLI | `main` | Orchestrates all packages, handles I/O |
 | Input | `flagparser` | Validates CLI argument structure |
 | Input | `color` | Parses color specs (named, hex, RGB) into RGB values |
-| Core | `parser` | Reads banner files, builds character maps |
+| Core | `parser` | Reads banner files from embedded FS, builds character maps |
 | Core | `renderer` | Converts text to ASCII art using banner maps |
 | Output | `coloring` | Applies ANSI color codes to rendered ASCII art |
 
@@ -49,4 +49,5 @@ flowchart LR
 
 - **Zero inter-package dependencies** — all packages depend only on the Go standard library
 - **Main as orchestrator** — `main` is the only package that imports other project packages
-- **Stateless packages** — all functions are pure transformations (no global state, no side effects except file I/O in parser)
+- **Stateless packages** — all functions are pure transformations (no global state, no side effects except embedded FS in main)
+- **Embedded filesystem** — banner files bundled into binary at compile time for relocatability

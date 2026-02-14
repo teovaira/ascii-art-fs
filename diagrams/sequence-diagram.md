@@ -25,8 +25,9 @@ sequenceDiagram
     color-->>main: RGB{R, G, B}
 
     main->>main: GetBannerPath(banner)
+    main->>main: GetBannerFS()
 
-    main->>parser: LoadBanner(path)
+    main->>parser: LoadBanner(fsys, path)
     parser-->>main: Banner map[rune][]string
 
     main->>color: ANSI(rgb)
@@ -64,9 +65,9 @@ sequenceDiagram
 
     User->>main: os.Args without --color
 
-    Note over main: ParseArgs() + GetBannerPath()
+    Note over main: ParseArgs() + GetBannerPath() + GetBannerFS()
 
-    main->>parser: LoadBanner(path)
+    main->>parser: LoadBanner(fsys, path)
     parser-->>main: Banner map[rune][]string
 
     main->>renderer: ASCII(text, banner)

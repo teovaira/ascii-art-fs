@@ -8,6 +8,7 @@ classDiagram
         +main()
         +ParseArgs(args []string) (string, string, error)
         +GetBannerPath(banner string) (string, error)
+        +GetBannerFS() fs.FS
         -runColorMode(args []string)
         -hasColorFlag(args []string) bool
         -extractColorArgs(args []string) (string, string, string, string, error)
@@ -15,7 +16,7 @@ classDiagram
 
     class parser {
         <<package>>
-        +LoadBanner(path string) (Banner, error)
+        +LoadBanner(fsys fs.FS, path string) (Banner, error)
         +CharWidths(text string, banner Banner) []int
     }
 
