@@ -1,7 +1,10 @@
 package main
 
 import (
+	"os"
 	"os/exec"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 )
@@ -362,10 +365,18 @@ func TestColorFlagFormatErrors_ShowColorUsage(t *testing.T) {
 }
 
 func TestBuiltBinary_FromRepoRoot(t *testing.T) {
-	buildCmd := exec.Command("go", "build", "-o", "../../bin/ascii-art-test", ".")
+	binName := "ascii-art-test"
+	if runtime.GOOS == "windows" {
+		binName += ".exe"
+	}
+
+	binPath := filepath.Join("..", "..", "bin", binName)
+
+	buildCmd := exec.Command("go", "build", "-o", binPath, ".")
 	if err := buildCmd.Run(); err != nil {
 		t.Fatalf("failed to build binary: %v", err)
 	}
+	defer os.Remove(binPath)
 
 	tests := []struct {
 		name        string
@@ -407,7 +418,7 @@ func TestBuiltBinary_FromRepoRoot(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cmd := exec.Command("../../bin/ascii-art-test", tt.args...)
+			cmd := exec.Command(binPath, tt.args...)
 			output, err := cmd.CombinedOutput()
 
 			if tt.expectError {
