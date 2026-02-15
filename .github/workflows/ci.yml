@@ -109,8 +109,9 @@ jobs:
       # It automatically installs golangci-lint and runs it.
       # It reads .golangci.yml from the repo root for configuration.
       # "version" specifies which golangci-lint version to install.
+      # Note: golangci-lint v2.x requires action v7 or higher.
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
           version: v2.1.6
 
