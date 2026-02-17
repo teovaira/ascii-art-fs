@@ -4,7 +4,7 @@ Execution flow from CLI input to ASCII art output. The program has two modes: **
 
 ```mermaid
 flowchart TD
-    A["CLI Arguments\nos.Args"] --> B{"hasColorFlag?\n--color= prefix"}
+    A["CLI Arguments\\nos.Args"] --> B{"hasColorFlag?\n--color= prefix"}
 
     B -->|No| C["ParseArgs()\ntext, banner"]
     B -->|Yes| D["flagparser.ParseArgs()\nvalidate syntax"]
