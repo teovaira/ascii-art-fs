@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"ascii-art-color/internal/renderer"
+	"ascii-art-fs/internal/renderer"
 )
 
 func TestEmptyInput(t *testing.T) {

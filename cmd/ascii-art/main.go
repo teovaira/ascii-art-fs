@@ -24,8 +24,8 @@ import (
 	"fmt"
 	"os"
 
-	"ascii-art-color/internal/parser"
-	"ascii-art-color/internal/renderer"
+	"ascii-art-fs/internal/parser"
+	"ascii-art-fs/internal/renderer"
 )
 
 const (
