@@ -301,7 +301,7 @@ func TestMainProgram_ErrorHandling(t *testing.T) {
 		{
 			name:     "No arguments",
 			args:     []string{},
-			errorMsg: "usage:",
+			errorMsg: "Usage: go run . [STRING] [BANNER]\n\nEX: go run . something standard",
 		},
 		{
 			name:     "Invalid banner",
