@@ -1,4 +1,4 @@
-# Contributing to ASCII Art Color
+# Contributing to ascii-art-fs
 
 Thank you for your interest in contributing to the ascii-art-fs project! This document provides guidelines and instructions for contributing.
 
