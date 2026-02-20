@@ -18,13 +18,15 @@ import (
 //   - text: The text to render (with escape sequences interpreted).
 //   - banner: The banner name to use.
 //   - err: An error if argument validation fails.
+const usageMsg = "Usage: go run . [STRING] [BANNER]\n\nEX: go run . something standard"
+
 func ParseArgs(args []string) (text string, banner string, err error) {
 	if len(args) < 2 {
-		return "", "", errors.New("usage: go run . \"text\" [banner]")
+		return "", "", errors.New(usageMsg)
 	}
 
 	if len(args) > 3 {
-		return "", "", errors.New("too many arguments\nusage: go run . \"text\" [banner]")
+		return "", "", errors.New(usageMsg)
 	}
 
 	text = strings.ReplaceAll(args[1], "\\n", "\n")

@@ -13,7 +13,7 @@ func TestParseArgs_NoArguments(t *testing.T) {
 		t.Error("Expected error for no arguments, got nil")
 	}
 
-	expectedMsg := "usage: go run . \"text\" [banner]"
+	expectedMsg := "Usage: go run . [STRING] [BANNER]\n\nEX: go run . something standard"
 	if err.Error() != expectedMsg {
 		t.Errorf("Expected error message: %q, got: %q", expectedMsg, err.Error())
 	}
