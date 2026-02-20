@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+- Renamed Go module from `ascii-art-color` to `ascii-art-fs` to match repository name
+- Updated all import paths, documentation, and project references accordingly
+
+### Fixed
+- Usage error message now matches the spec format exactly:
+  `Usage: go run . [STRING] [BANNER]` with `EX: go run . something standard`
+- Updated tests to assert the full spec-compliant usage message
+
+---
+
 ## [1.1.0] - 2026-02-17
 
 ### Added
